@@ -9,6 +9,7 @@
       * { box-sizing: border-box; }
       body {
         min-height: 100vh;
+        min-height: 100dvh;
         margin: 0;
         display: grid;
         place-items: center;
@@ -83,9 +84,14 @@
       const googleQuery = document.querySelector('#google-query');
       const chatgptQuery = document.querySelector('#chatgpt-query');
       const note = document.querySelector('#note');
-      if (/Orion/i.test(navigator.userAgent)) {
-        document.documentElement.style.setProperty('--mobile-bottom-space', '126px');
-      }
+      const accountForBrowserBar = () => {
+        const viewport = window.visualViewport;
+        if (!viewport) return;
+        const browserBar = Math.max(0, window.innerHeight - viewport.height - viewport.offsetTop);
+        document.documentElement.style.setProperty('--mobile-bottom-space', `${Math.max(62, browserBar + 62)}px`);
+      };
+      accountForBrowserBar();
+      window.visualViewport?.addEventListener('resize', accountForBrowserBar);
       const autoGrow = input => {
         input.style.height = 'auto';
         input.style.height = Math.min(input.scrollHeight, 260) + 'px';
