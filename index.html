@@ -96,7 +96,16 @@
         input.style.height = 'auto';
         input.style.height = Math.min(input.scrollHeight, 260) + 'px';
       };
-      const bindSearch = (input, destination) => {
+      const openChatGPT = value => {
+        const link = document.createElement('a');
+        link.href = 'https://chatgpt.com/?q=' + encodeURIComponent(value);
+        link.referrerPolicy = 'no-referrer';
+        link.rel = 'noreferrer';
+        link.hidden = true;
+        document.body.append(link);
+        link.click();
+      };
+      const bindSearch = (input, navigate) => {
         autoGrow(input);
         input.addEventListener('input', () => autoGrow(input));
         input.addEventListener('keydown', event => {
@@ -104,11 +113,11 @@
           event.preventDefault();
           const value = input.value.trim();
           if (!value) return input.focus();
-          location.assign(destination + encodeURIComponent(value));
+          navigate(value);
         });
       };
-      bindSearch(googleQuery, 'https://www.google.com/search?q=');
-      bindSearch(chatgptQuery, 'https://chatgpt.com/?q=');
+      bindSearch(googleQuery, value => location.assign('https://www.google.com/search?q=' + encodeURIComponent(value)));
+      bindSearch(chatgptQuery, openChatGPT);
     </script>
   </body>
 </html>
